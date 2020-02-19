@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.horse.dao.NoticeBoardDao">
+  	<!-- 리스트 -->
+  	<select id="boardList" resultType="nvo">
+  		select nnum, ntitle, ncontent, nhit, ndate from notice order by nnum desc
+  	</select>
+  	
+  	<!-- 상세보기 -->
+  	<select id="noticeDetail" parameterType="int" resultType="nvo">
+		select nnum, ntitle, ncontent, nhit, ndate from notice where nnum=#{nnum}
+	</select>
+	
+	<!-- 글쓰기 -->
+	<insert id="noticeInsert" parameterType="nvo">
+		insert into notice values(notice_seq.nextVal,#{ntitle},#{ncontent},0,sysdate)
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="noticeUpdate" parameterType="nvo">
+		update notice set ntitle=#{ntitle}, ncontent=#{ncontent} where nnum=#{nnum}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="noticeDelete" parameterType="int">
+		delete from notice where nnum=#{nnum}
+	</delete>
+	
+	<!-- 조회수  -->
+	<update id="noticeHit" parameterType="int">
+		update notice set nhit = nhit + 1 where nnum=#{nnum}
+	</update>
+  </mapper>
