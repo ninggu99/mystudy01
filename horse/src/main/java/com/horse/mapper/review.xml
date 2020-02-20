@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.horse.dao.ReviewDao">
+	<!-- 리뷰입력 -->
+	<insert id="reviewinsert" parameterType="reviewvo">
+		insert into review
+		values(review_seq.nextVal,#{retitle},#{recontent},0,sysdate)
+	</insert>
+
+	<!-- 리뷰리스트 -->
+	<select id="reviewList" resultType="reviewvo">
+		select r_num, renum, retitle,
+		recontent,
+		rehit, redate
+		from (SELECT ROWNUM
+		r_num, a.* FROM
+		(SELECT *
+		FROM review ORDER BY 1 DESC
+		) a
+		)
+	</select>
+
+	<!-- 상세보기 -->
+	<select id="reviewDetail" parameterType="int"
+		resultType="reviewvo">
+		select
+		renum, retitle, recontent, rehit, redate from review
+		where renum=#{renum}
+	</select>
+
+
+
+	<!-- 수정 -->
+	<update id="reviewUpdate" parameterType="reviewvo">
+		update review set
+		retitle=#{retitle}, recontent=#{recontent} where renum=#{renum}
+	</update>
+
+
+	<!-- 삭제 -->
+	<delete id="reviewDelete" parameterType="int">
+		delete from review where
+		renum=#{renum}
+	</delete>
+
+	<!-- 조회수 -->
+	<update id="reviewHit" parameterType="int">
+		update review set rehit =
+		rehit + 1 where renum=#{renum}
+	</update>
+
+	<!-- 공지사항 데이터 개수 -->
+	<select id="reviewTotalCount" resultType="int">
+		select count(*) cnt
+		from
+		review
+	</select>
+
+
+
+</mapper>

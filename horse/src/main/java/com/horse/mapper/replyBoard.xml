@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.horse.dao.ReplyBoardDao">
+	<select id="replyList" parameterType="revo" resultType="revo">
+		select onum,ooid,qnum,ocontent,ndate from comm where qnum=#{qnum}
+	</select>
+	
+	<insert id="saveReply" parameterType="revo">
+		insert into comm values(comm_seq.nextVal,#{ooid},#{qnum},#{ocontent},sysdate)
+	</insert>
+	
+	<update id="updateReply" parameterType="revo">
+		update comm set ocontent=#{ocontent} where onum=#{onum}
+	</update>
+	
+	<delete id="deleteReply" parameterType="int">
+		delete from comm where onum=#{onum}
+	</delete>
+	
+</mapper>

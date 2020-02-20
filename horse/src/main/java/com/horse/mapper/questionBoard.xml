@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.horse.dao.QuestionBoardDao">
+
+	<!-- 리스트 -->
+	<select id="boardList" resultType="qvo"><!-- resultType:반환되는 클래스 타입  -->
+		select r_num, qnum, mid, qtitle, qcontent, qhit, qdate from(select rownum r_num, a.* from(select * from question order by 1 asc)a) order by 1 desc
+	</select>
+	
+	<!-- 상세보기 -->
+	<select id="questionDetail" parameterType="int" resultType="qvo">
+		select qnum, mid, qtitle, qcontent,qdate from question where qnum=#{qnum}
+	</select>
+	
+	<!-- 글쓰기 -->
+	<insert id="questionInsert" parameterType="qvo">
+		insert into question values(question_seq.nextVal,'admin',#{qtitle},#{qcontent},0,sysdate)
+	</insert>
+	<!-- 수정 -->
+	<update id="questionUpdate" parameterType="qvo">
+		update question set qtitle=#{qtitle}, qcontent=#{qcontent} where qnum=#{qnum}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="questionDelete" parameterType="int">
+		delete from question where qnum=#{qnum}
+	</delete>
+	
+	<!-- 조회수  -->
+	<update id="questioinHit" parameterType="int">
+		update question set qhit = qhit + 1 where qnum=#{qnum}
+	</update>
+</mapper>
