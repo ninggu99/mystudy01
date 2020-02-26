@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.horse.dao.QuestionBoardDao">
+
+	<!-- 리스트 -->
+	<select id="boardList" resultType="qvo"><!-- resultType:반환되는 클래스 타입  -->
+		select qnum, mid, qtitle, qcontent, qhit, qdate from question order by qnum desc
+	</select>
+	
+	<!-- 상세보기 -->
+	<select id="questionDetail" parameterType="int" resultType="qvo">
+		select qnum, mid, qtitle, qcontent,qhit,qdate from question where qnum=#{qnum}
+	</select>
+	
+	<!-- 글쓰기 -->
+	<insert id="questionInsert" parameterType="qvo">
+		insert into question values(question_seq.nextVal,'admin',#{qtitle},#{qcontent},0,sysdate)
+	</insert>
+	<!-- 수정 -->
+	<update id="questionUpdate" parameterType="qvo">
+		update question set qtitle=#{qtitle}, qcontent=#{qcontent} where qnum=#{qnum}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="questionDelete" parameterType="int">
+		delete from question where qnum=#{qnum}
+	</delete>
+	
+	<!-- 조회수  -->
+	<update id="questioinHit" parameterType="int">
+		update question set qhit = qhit + 1 where qnum=#{qnum}
+	</update>
+	
+	<!-- 문의사항 테이블 갯수 -->
+	<select id="questionCount" resultType="int" parameterType="svo">
+		select count(*) cnt from question
+		<if test="searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType ==1">
+						writer Like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						grpcode Like'%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType==3">
+						comm Like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+	</select>
+	
+	<!-- 문의사항 페이징 리스트 -->
+	<select id="questionList" resultType="qvo" parameterType="svo">
+		select * from(select rownum r_num, a.* from
+		(select * from question 
+		<if test="searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType ==1">
+						writer Like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						grpcode Like'%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType==3">
+						comm Like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+		order by qnum desc) a) where r_num between #{begin} and #{end}
+	</select>
+</mapper>

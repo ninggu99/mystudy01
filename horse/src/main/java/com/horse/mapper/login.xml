@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.horse.dao.LoginDao">
+
+	<!-- search id -->
+	<select id="searchId" parameterType="String" resultType="int">
+		select count(*) from member where mid = #{mid}
+	</select>
+
+	<!-- 상세보기 -->
+	<select id="searchPwd" parameterType="membervo" resultType="int">
+		select count(*) from member where mid=#{mid} and mpwd = #{mpwd}
+	</select>
+</mapper>

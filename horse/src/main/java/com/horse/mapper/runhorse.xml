@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.horse.dao.RunHorseDao">
+	<insert id="runhorseinsert" parameterType="runhorsevo">
+		insert into horse
+		values(HORSE_SEQ.nextval,#{hname},#{hage},#{hsex},#{hsanji},#{hpicture},#{htotal},#{hwin},#{hweight})
+	</insert>
+
+	<!-- 경마 리스트 -->
+	<select id="runhorselist" resultType="runhorsevo">
+		select r_num, hnum, hname, hage,
+		hsex, hsanji, hpicture, htotal, hwin, hweight from
+		(SELECT ROWNUM
+		r_num, a.* FROM (SELECT * FROM horse ORDER BY 1 desc) a )
+	</select>
+	<!-- 상세보기 -->
+	<select id="runhorseDetail" parameterType="int"
+		resultType="runhorsevo">
+		select
+	    hnum, hname, hage, hsex,
+		hsanji,hpicture,htotal,hwin,hweight
+		from horse
+		where hnum=#{hnum}
+	</select>
+	<!-- 수정 -->
+	<update id="runhorseUpdate" parameterType="runhorsevo">
+		update horse set
+		hname=#{hname}, hage=#{hage}, hsex=#{hsex}, hsanji=#{hsanji},
+		hpicture=#{hpicture}, htotal=#{htotal}, hwin=#{hwin},
+		hweight=#{hweight}
+		where hnum=#{hnum}
+	</update>
+	<!-- 삭제 -->
+	<delete id="runhorseDelete" parameterType="runhorsevo">
+		delete from horse
+		where
+		hnum=#{hnum}
+	</delete>
+	
+	<!-- 경마장 테이블 갯수 -->
+	<select id="runhorseCount" resultType="int" parameterType="svo">
+		select count(*) cnt from horse
+		<if test="searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType ==1">
+						writer Like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						grpcode Like'%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType==3">
+						comm Like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+	</select>
+	
+	<!-- 경마장 페이징 리스트 -->
+	<select id="runhorseList" resultType="runhorsevo" parameterType="svo">
+		select * from(select rownum r_num, a.* from
+		(select * from horse 
+		<if test="searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType ==1">
+						writer Like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						grpcode Like'%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType==3">
+						comm Like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+		order by hnum desc) a) where r_num between #{begin} and #{end}
+	</select>
+</mapper>

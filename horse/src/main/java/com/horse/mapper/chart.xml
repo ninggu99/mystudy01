@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.horse.dao.ChartDao">
+  	<select id="chartList" resultType="chartvo">
+  	 select 
+  	(select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+  	where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=1 order
+    by winrate desc) where rownum=1)as count1,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=2 order
+    by winrate desc) where rownum=1)as count2,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=3 order
+    by winrate desc) where rownum=1)as count3,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=4 order
+    by winrate desc) where rownum=1)as count4,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=5 order
+    by winrate desc) where rownum=1)as count5,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=6 order
+    by winrate desc) where rownum=1)as count6,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=7 order
+    by winrate desc) where rownum=1)as count7,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=8 order
+    by winrate desc) where rownum=1)as count8,
+    (select winrate from (select round(100*(hwin/htotal),2) as winrate from horse h, game g, exhibition e 
+    where h.hnum=e.hnum and e.gnum=g.gnum and g.gnum=9 order
+    by winrate desc) where rownum=1)as count9 
+    from exhibition 
+    where rownum=1   	
+  	</select>
+  	<select id="cheerupList" resultType="chartvo">
+  	select h.hname hname, count(c.enum) cnt from cheerup c, exhibition e, horse h 
+  	where e.hnum=h.hnum and c.enum=e.enum group by h.hname order by cnt desc
+  	</select>
+  </mapper>

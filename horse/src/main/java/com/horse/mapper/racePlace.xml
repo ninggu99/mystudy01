@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.horse.dao.RacePlaceDao">
+	<insert id="raceplaceinsert" parameterType="raceplacevo">
+		insert into place
+		values(PLACE_SEQ.nextval,#{pname},#{paddr},#{ptel},#{plink},#{pplace},sysdate)
+	</insert>
+	
+	<!-- 승마장 리스트 -->
+	<select id="raceplacelist" resultType="raceplacevo">
+		select r_num, pnum,pname, paddr,	ptel, plink, pplace, pdate from 
+		(SELECT ROWNUM r_num, a.* FROM (SELECT * FROM place ORDER BY 1 desc) a )
+	</select>
+	<!-- 상세보기 -->
+	<select id="raceplaceDetail" parameterType="int"
+		resultType="raceplacevo">
+		select
+		pnum, pname, ptel, paddr, plink, pplace from place
+		where pnum=#{pnum}
+	</select>
+
+
+
+	<!-- 수정 -->
+	<update id="raceplaceUpdate" parameterType="raceplacevo">
+	update place set
+	pname=#{pname}, paddr=#{paddr}, ptel=#{ptel}, pplace=#{pplace} where
+	pnum=#{pnum}
+	</update>
+	<!-- 삭제 -->
+	<delete id="raceplaceDelete" parameterType="raceplacevo">
+		delete from place where pnum=#{pnum}
+	</delete>
+	
+	
+</mapper>

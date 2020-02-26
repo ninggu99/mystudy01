@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.horse.dao.GameDao">
+	<insert id="gameinsert" parameterType="gamevo">
+		insert into game
+		values(GAME_SEQ.nextval,#{gmeter},#{gtime},sysdate)
+	</insert>
+
+	<!-- 승마장 리스트 -->
+	<select id="gamelist" resultType="gamevo">
+		select r_num, gnum, gmeter,
+		gtime, gdate from
+		(SELECT ROWNUM r_num, a.* FROM (SELECT * FROM game ORDER BY 1 desc) a )
+	</select>
+	<!-- 상세보기 -->
+	<select id="gameDetail" parameterType="int" resultType="gamevo">
+		select
+		gnum, gmeter, gtime, gdate from game
+		where gnum=#{gnum}
+	</select>
+
+
+
+	<!-- 수정 -->
+	<update id="gameUpdate" parameterType="gamevo">
+		update game set
+		gmeter=#{gmeter}, gtime=#{gtime} where
+		gnum=#{gnum}
+	</update>
+	<!-- 삭제 -->
+	<delete id="gameDelete" parameterType="gamevo">
+		delete from game where
+		gnum=#{gnum}
+	</delete>
+</mapper>
